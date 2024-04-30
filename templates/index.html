@@ -1,0 +1,60 @@
+  <!DOCTYPE html>
+  <html lang="en">
+
+  <head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Product Review Analyzer</title>
+      <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  </head>
+
+  <body>
+      <div class="flex flex-col items-center justify-center h-screen gap-8">
+          <div class="flex flex-col items-center gap-4 w-full max-w-md">
+              <h1 class="text-3xl font-bold">Product Review Analyzer</h1>
+              <form method="POST" action="/analyze" class="w-full max-w-md flex gap-2">
+                  <input name="product_url"
+                      class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 flex-1"
+                      placeholder="Paste link here" type="text" />
+                      <button type="submit"
+                      class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-black text-white hover:bg-primary/90 h-10 px-4 py-2">
+                      Review analysis 
+                  </button>
+              </form>
+          </div>
+          <!-- Analysis results section will be populated by the backend -->
+          <div class="rounded-lg border bg-yellow-500 dark:bg-yellow-900/20 text-card-foreground shadow-sm w-full max-w-2xl" id="analysis_results" data-v0-t="card">
+              {% if results %}
+              <div class="p-6">
+                  <div class="grid grid-cols-3 gap-4">
+                      {% for result in results %}
+                      <div class="flex flex-col items-center justify-center p-6 {% if result.label == 'Positive' %} bg-green-100 dark:bg-green-900/20 {% elif result.label == 'Neutral' %} bg-yellow-100 dark:bg-yellow-900/20 {% else %} bg-red-100 dark:bg-red-900/20 {% endif %} rounded-lg">
+                          {% if result.label == 'Positive' %}
+                          <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-green-500 dark:text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M5 13l4 4L19 7l-1.5-1.5L9 15.5 6.5 13z" clip-rule="evenodd" />
+                        </svg>
+                          {% elif result.label == 'Neutral' %}
+                          <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-yellow-500 dark:text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M5 13l4 4L19 7l-1.5-1.5L9 15.5 6.5 13z" clip-rule="evenodd" />
+                        </svg>
+                          {% else %}
+                          <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-red-500 dark:text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M5 13l4 4L19 7l-1.5-1.5L9 15.5 6.5 13z" clip-rule="evenodd" />
+                        </svg>
+                          {% endif %}
+                          <div class="text-2xl font-bold {% if result.label == 'Positive' %} text-green-500 dark:text-green-400 {% elif result.label == 'Neutral' %} text-yellow-500 dark:text-yellow-400 {% else %} text-red-500 dark:text-red-400 {% endif %}">{{ result.label }}</div>
+                          <div class="text-4xl font-bold">{{ result.score }}%</div>
+                          <div class="aspect-[4/3]">
+                              <div style="width: 100%; height: 100%;"></div>
+                          </div>
+                      </div>
+                      {% endfor %}
+                  </div>
+              </div>
+              {% endif %}
+          </div>
+      </div>
+  </body>
+
+  </html>
